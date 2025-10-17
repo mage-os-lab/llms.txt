@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MageOS\LlmTxt\Controller\Adminhtml\Generate;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -13,27 +13,25 @@ use MageOS\LlmTxt\Model\Generator;
 use MageOS\LlmTxt\Model\OpenAi\Client as OpenAiClient;
 use MageOS\LlmTxt\Model\StoreDataCollector;
 
-class Index extends Action
+class Index implements HttpPostActionInterface
 {
-    public const ADMIN_RESOURCE = 'MageOS_LlmTxt::config';
+    public const string ADMIN_RESOURCE = 'MageOS_LlmTxt::config';
 
     public function __construct(
-        Context $context,
+        private readonly RequestInterface $request,
         private readonly JsonFactory $resultJsonFactory,
         private readonly OpenAiClient $openAiClient,
         private readonly StoreDataCollector $storeDataCollector,
         private readonly Generator $generator,
         private readonly StoreManagerInterface $storeManager
-    ) {
-        parent::__construct($context);
-    }
+    ) {}
 
     public function execute(): Json
     {
         $result = $this->resultJsonFactory->create();
 
         try {
-            $storeId = (int) $this->getRequest()->getParam('store', 0);
+            $storeId = (int) $this->request->getParam('store', 0);
             if ($storeId === 0) {
                 $storeId = (int) $this->storeManager->getDefaultStoreView()->getId();
             }
