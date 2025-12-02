@@ -15,7 +15,7 @@ use MageOS\LlmTxt\Model\StoreDataCollector;
 
 class Index implements HttpPostActionInterface
 {
-    public const string ADMIN_RESOURCE = 'MageOS_LlmTxt::config';
+    public const ADMIN_RESOURCE = 'MageOS_LlmTxt::config';
 
     public function __construct(
         private readonly RequestInterface $request,
