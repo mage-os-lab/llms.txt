@@ -22,7 +22,7 @@ Learn more: [llmstxt.org](https://llmstxt.org)
 ## Installation
 
 ```bash
-composer require mage-os-lab/llms-txt
+composer require mage-os/module-llm-txt
 bin/magento module:enable MageOS_LlmTxt
 bin/magento setup:upgrade
 bin/magento setup:di:compile
