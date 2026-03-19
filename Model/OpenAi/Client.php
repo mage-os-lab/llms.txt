@@ -6,34 +6,29 @@ namespace MageOS\LlmTxt\Model\OpenAi;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Store\Model\ScopeInterface;
+use MageOS\LlmTxt\Model\Config;
 use Psr\Log\LoggerInterface;
 
 class Client
 {
     private const API_ENDPOINT = 'https://api.openai.com/v1/responses';
-    private const XML_PATH_API_KEY = 'llmtxt/ai_generation/openai_api_key';
-    private const XML_PATH_MODEL = 'llmtxt/ai_generation/openai_model';
     private const TIMEOUT = 60;
 
     public function __construct(
-        private readonly ScopeConfigInterface $scopeConfig,
-        private readonly EncryptorInterface $encryptor,
         private readonly HttpClient $httpClient,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly Config $config
     ) {
     }
 
     public function generateLlmsTxt(array $storeData, ?int $storeId = null): string
     {
-        $apiKey = $this->getApiKey($storeId);
+        $apiKey = $this->config->getOpenAiApiKey($storeId);
         if (empty($apiKey)) {
             throw new \RuntimeException('OpenAI API key is not configured');
         }
 
-        $model = $this->getModel($storeId);
+        $model = $this->config->getOpenAiModel($storeId);
         $prompt = $this->buildPrompt($storeData);
 
         try {
@@ -219,25 +214,5 @@ PROMPT;
         }
 
         return implode("\n", $lines) ?: 'No pages available';
-    }
-
-    private function getApiKey(?int $storeId): string
-    {
-        $encrypted = (string) $this->scopeConfig->getValue(
-            self::XML_PATH_API_KEY,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-
-        return $encrypted ? $this->encryptor->decrypt($encrypted) : '';
-    }
-
-    private function getModel(?int $storeId): string
-    {
-        return (string) $this->scopeConfig->getValue(
-            self::XML_PATH_MODEL,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        ) ?: 'gpt-4o-mini';
     }
 }
