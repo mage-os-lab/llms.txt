@@ -16,7 +16,7 @@ class Client
     private const API_ENDPOINT = 'https://api.openai.com/v1/responses';
     private const XML_PATH_API_KEY = 'llmtxt/ai_generation/openai_api_key';
     private const XML_PATH_MODEL = 'llmtxt/ai_generation/openai_model';
-    private const TIMEOUT = 30;
+    private const TIMEOUT = 60;
 
     public function __construct(
         private readonly ScopeConfigInterface $scopeConfig,
@@ -178,9 +178,13 @@ PROMPT;
     {
         $lines = [];
         foreach ($categories as $category) {
-            $desc = mb_substr($category['description'] ?? '', 0, 100);
-            $lines[] = "- {$category['name']}: {$desc}";
+            $name = $category['name'];
+            $description = mb_substr($category['description'] ?? '', 0, 100);
+            $url = $category['url'];
+
+            $lines[] = "- $name ($url): $description";
         }
+
         return implode("\n", $lines) ?: 'No categories available';
     }
 
@@ -189,10 +193,17 @@ PROMPT;
         $lines = [];
         $count = 0;
         foreach ($products as $product) {
-            if ($count++ >= 10) break; // Limit to 10 products in prompt
-            $desc = mb_substr($product['description'] ?? '', 0, 80);
-            $lines[] = "- {$product['name']}: {$desc}";
+            if ($count++ >= 10) {
+                break;
+            }
+
+            $name = $product['name'];
+            $description = mb_substr($product['description'] ?? '', 0, 80);
+            $url = $product['url'];
+
+            $lines[] = "- $name ($url): $description";
         }
+
         return implode("\n", $lines) ?: 'No products available';
     }
 
@@ -200,8 +211,13 @@ PROMPT;
     {
         $lines = [];
         foreach ($pages as $page) {
-            $lines[] = "- {$page['title']} ({$page['identifier']})";
+            $title = $page['title'];
+            $identifier = $page['identifier'];
+            $url = $page['url'];
+
+            $lines[] = "- $title ($url): $identifier";
         }
+
         return implode("\n", $lines) ?: 'No pages available';
     }
 
@@ -223,14 +239,5 @@ PROMPT;
             ScopeInterface::SCOPE_STORE,
             $storeId
         ) ?: 'gpt-4o-mini';
-    }
-
-    private function getBaseUrl(int $storeId): string
-    {
-        try {
-            return (string) $this->storeManager->getStore($storeId)->getBaseUrl();
-        } catch (NoSuchEntityException $e) {
-            return '';
-        }
     }
 }
