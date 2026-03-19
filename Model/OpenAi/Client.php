@@ -5,7 +5,6 @@ namespace MageOS\LlmTxt\Model\OpenAi;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use MageOS\LlmTxt\Model\Config;
-use MageOS\LlmTxt\Model\PromptBuilder;
 use Psr\Log\LoggerInterface;
 
 class Client
@@ -17,19 +16,19 @@ class Client
         private readonly HttpClient $httpClient,
         private readonly LoggerInterface $logger,
         private readonly Config $config,
-        private readonly PromptBuilder $promptBuilder,
-    ) {
-    }
+    ) {}
 
-    public function generateLlmsTxt(array $storeData, ?int $storeId = null): string
-    {
-        $apiKey = $this->config->getOpenAiApiKey($storeId);
+    public function postResponses(
+        string $model,
+        string $prompt,
+        string $instructions,
+        int $maxOutputTokens,
+        float $temperature = 0.7
+    ): string {
+        $apiKey = $this->config->getOpenAiApiKey();
         if (empty($apiKey)) {
             throw new \RuntimeException('OpenAI API key is not configured');
         }
-
-        $model = $this->config->getOpenAiModel($storeId);
-        $prompt = $this->promptBuilder->buildPrompt($storeData);
 
         try {
             $response = $this->httpClient->post(self::API_ENDPOINT, [
@@ -40,9 +39,9 @@ class Client
                 ],
                 'json' => [
                     'model' => $model,
-                    'instructions' => 'You are an expert at creating concise, well-structured llms.txt files that help AI systems understand website content. You follow the llmstxt.org standard precisely.',
+                    'instructions' => $instructions,
                     'input' => $prompt,
-                    'max_output_tokens' => 2000,
+                    'max_output_tokens' => $maxOutputTokens,
                 ],
             ]);
 
@@ -64,7 +63,6 @@ class Client
         } catch (GuzzleException $e) {
             $this->logger->error('OpenAI API request failed', [
                 'exception' => $e->getMessage(),
-                'store_id' => $storeId,
             ]);
 
             $statusCode = method_exists($e, 'getResponse') && $e->getResponse()
@@ -83,7 +81,6 @@ class Client
         } catch (\Throwable $e) {
             $this->logger->error('OpenAI API request failed', [
                 'exception' => $e->getMessage(),
-                'store_id' => $storeId,
             ]);
 
             if ((int) $e->getCode() === 401) {

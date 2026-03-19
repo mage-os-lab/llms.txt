@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace MageOS\LlmTxt\Controller\Adminhtml\Generate;
 
@@ -9,13 +7,17 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use MageOS\LlmTxt\Model\Config;
 use MageOS\LlmTxt\Model\Generator;
 use MageOS\LlmTxt\Model\OpenAi\Client as OpenAiClient;
+use MageOS\LlmTxt\Model\PromptBuilder;
 use MageOS\LlmTxt\Model\StoreDataCollector;
 
 class Index implements HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'MageOS_LlmTxt::config';
+    public const INSTRUCTIONS = 'You are an expert at creating concise, well-structured llms.txt files that help AI systems understand website content. You follow the llmstxt.org standard precisely.';
+    public const MAX_OUTPUT_TOKENS = 2000;
 
     public function __construct(
         private readonly RequestInterface $request,
@@ -23,7 +25,9 @@ class Index implements HttpPostActionInterface
         private readonly OpenAiClient $openAiClient,
         private readonly StoreDataCollector $storeDataCollector,
         private readonly Generator $generator,
-        private readonly StoreManagerInterface $storeManager
+        private readonly StoreManagerInterface $storeManager,
+        private readonly PromptBuilder $promptBuilder,
+        private readonly Config $config,
     ) {}
 
     public function execute(): Json
@@ -40,7 +44,12 @@ class Index implements HttpPostActionInterface
             $storeData = $this->storeDataCollector->collect($storeId);
 
             // Generate via OpenAI
-            $generatedContent = $this->openAiClient->generateLlmsTxt($storeData, $storeId);
+            $generatedContent = $this->openAiClient->postResponses(
+                $this->config->getOpenAiModel(),
+                $this->promptBuilder->buildPrompt($storeData),
+                self::INSTRUCTIONS,
+                self::MAX_OUTPUT_TOKENS
+            );
 
             // Estimate tokens
             $tokenCount = $this->generator->estimateTokenCount($generatedContent);

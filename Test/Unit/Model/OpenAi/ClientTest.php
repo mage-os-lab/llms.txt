@@ -46,7 +46,7 @@ final class ClientTest extends TestCase
         $this->scopeConfig->method('getValue')->willReturn('');
         $this->encryptor->method('decrypt')->willReturn('');
 
-        $this->client->generateLlmsTxt([], 1);
+        $this->client->postResponses([], 1);
     }
 
     public function test_generate_llms_txt_returns_content_on_success(): void
@@ -92,7 +92,7 @@ final class ClientTest extends TestCase
             ->method('post')
             ->willReturn($response);
 
-        $result = $this->client->generateLlmsTxt($storeData, 1);
+        $result = $this->client->postResponses($storeData, 1);
 
         $this->assertSame($expectedContent, $result);
     }
@@ -117,7 +117,7 @@ final class ClientTest extends TestCase
 
         $this->httpClient->method('post')->willThrowException($exception);
 
-        $this->client->generateLlmsTxt(['store_name' => 'Test'], 1);
+        $this->client->postResponses(['store_name' => 'Test'], 1);
     }
 
     public function test_generate_llms_txt_handles_rate_limit_error(): void
@@ -140,7 +140,7 @@ final class ClientTest extends TestCase
 
         $this->httpClient->method('post')->willThrowException($exception);
 
-        $this->client->generateLlmsTxt(['store_name' => 'Test'], 1);
+        $this->client->postResponses(['store_name' => 'Test'], 1);
     }
 
     public function test_generate_llms_txt_logs_errors(): void
@@ -165,7 +165,7 @@ final class ClientTest extends TestCase
             ->with('OpenAI API request failed', $this->anything());
 
         try {
-            $this->client->generateLlmsTxt(['store_name' => 'Test'], 1);
+            $this->client->postResponses(['store_name' => 'Test'], 1);
         } catch (\RuntimeException $e) {
             // Expected
         }

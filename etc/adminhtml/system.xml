@@ -50,13 +50,13 @@
                     </depends>
                 </field>
             </group>
-            <group id="ai_generation" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="ai_generation" translate="label" type="text" sortOrder="20" showInDefault="1">
                 <label>AI-Powered Generation</label>
                 <comment><![CDATA[
                     <p>Use AI to intelligently generate llms.txt content from your store data.</p>
                     <p><strong>Note:</strong> Requires OpenAI API key. Generation costs approximately $0.001 per request.</p>
                 ]]></comment>
-                <field id="openai_api_key" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="openai_api_key" translate="label comment" type="obscure" sortOrder="10" showInDefault="1">
                     <label>OpenAI API Key</label>
                     <comment><![CDATA[Get your API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>]]></comment>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -64,7 +64,7 @@
                         <field id="*/*/enabled">1</field>
                     </depends>
                 </field>
-                <field id="openai_model" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="openai_model" translate="label comment" type="select" sortOrder="20" showInDefault="1">
                     <label>AI Model</label>
                     <comment>GPT-4o Mini is recommended for speed and cost</comment>
                     <source_model>MageOS\LlmTxt\Model\Config\Source\OpenAiModel</source_model>
@@ -72,7 +72,7 @@
                         <field id="*/*/enabled">1</field>
                     </depends>
                 </field>
-                <field id="generate_button" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="generate_button" translate="label" type="button" sortOrder="30" showInDefault="1">
                     <label>Generate Content</label>
                     <frontend_model>MageOS\LlmTxt\Block\Adminhtml\System\Config\GenerateButton</frontend_model>
                     <depends>
