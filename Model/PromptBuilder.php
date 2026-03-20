@@ -2,13 +2,18 @@
 
 namespace MageOS\LlmTxt\Model;
 
+use MageOS\LlmTxt\Model\Data\SectionItem;
+use MageOS\LlmTxt\Model\Data\StoreContext;
+
 class PromptBuilder
 {
-    public function buildPrompt(array $storeData): string
+    public const MAX_DESCRIPTION_LENGTH = 255;
+
+    public function buildPrompt(StoreContext $storeData): string
     {
-        $categoriesText = $this->formatCategories($storeData['categories'] ?? []);
-        $productsText = $this->formatProducts($storeData['products'] ?? []);
-        $pagesText = $this->formatPages($storeData['cms_pages'] ?? []);
+        $categorySection = $this->formatSection('Top Categories', $storeData->getCategories() ?: []);
+        $productSection = $this->formatSection('Sample Products', $storeData->getProducts() ?: []);
+        $pageSection = $this->formatSection('Key Pages', $storeData->getCmsPages() ?: []);
 
         return <<<PROMPT
 Create an llms.txt file for this Magento eCommerce store.
@@ -34,67 +39,40 @@ REQUIREMENTS:
 8. Write all text only in the language of the store locale
 
 STORE DATA:
-Store Name: {$storeData['store_name']}
-Store URL: {$storeData['store_url']}
-Store Locale: {$storeData['store_locale']}
+Store Name: {$storeData->getName()}
+Store URL: {$storeData->getUrl()}
+Store Locale: {$storeData->getLocale()}
 
-Top Categories:
-{$categoriesText}
+{$categorySection}
 
-Sample Products:
-{$productsText}
+{$productSection}
 
-Key Pages:
-{$pagesText}
+{$pageSection}
 
 Generate ONLY the llms.txt content. No explanations or preamble.
 PROMPT;
     }
 
-    private function formatCategories(array $categories): string
+    /**
+     * @param string $sectionName
+     * @param SectionItem[] $sectionItems
+     * @return string
+     */
+    private function formatSection(string $sectionName, array $sectionItems): string
     {
+        if (!$sectionItems) {
+            return '';
+        }
+
         $lines = [];
-        foreach ($categories as $category) {
-            $name = $category['name'];
-            $description = mb_substr($category['description'] ?? '', 0, 100);
-            $url = $category['url'];
+        foreach ($sectionItems as $sectionItem) {
+            $name = (string) $sectionItem->getName();
+            $description = mb_substr((string) $sectionItem->getDescription(), 0, self::MAX_DESCRIPTION_LENGTH);
+            $url = (string )$sectionItem->getUrl();
 
             $lines[] = "- [$name]($url): $description";
         }
 
-        return implode("\n", $lines) ?: 'No categories available';
-    }
-
-    private function formatProducts(array $products): string
-    {
-        $lines = [];
-        $count = 0;
-        foreach ($products as $product) {
-            if ($count++ >= 10) {
-                break;
-            }
-
-            $name = $product['name'];
-            $description = mb_substr($product['description'] ?? '', 0, 80);
-            $url = $product['url'];
-
-            $lines[] = "- [$name]($url): $description";
-        }
-
-        return implode("\n", $lines) ?: 'No products available';
-    }
-
-    private function formatPages(array $pages): string
-    {
-        $lines = [];
-        foreach ($pages as $page) {
-            $name = $page['name'];
-            $description = $page['description'];
-            $url = $page['url'];
-
-            $lines[] = "- [$name]($url): $description";
-        }
-
-        return implode("\n", $lines) ?: 'No pages available';
+        return $sectionName . ":\n" . implode("\n", $lines);
     }
 }

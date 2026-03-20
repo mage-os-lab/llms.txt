@@ -13,6 +13,9 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
+use MageOS\LlmTxt\Model\Data\SectionItemFactory;
+use MageOS\LlmTxt\Model\Data\StoreContext;
+use MageOS\LlmTxt\Model\Data\StoreContextFactory;
 
 class StoreDataCollector
 {
@@ -25,29 +28,35 @@ class StoreDataCollector
         private readonly PageCollectionFactory $pageCollectionFactory,
         private readonly UrlInterface $urlBuilder,
         private readonly Config $config,
+        private readonly SectionItemFactory $sectionItemFactory,
+        private readonly StoreContextFactory $storeContextFactory,
     ) {}
 
-    public function collect(int $storeId): array
+    public function collect(int $storeId): StoreContext
     {
         $this->emulation->startEnvironmentEmulation($storeId, Area::AREA_FRONTEND, true);
 
         try {
             $store = $this->storeManager->getStore($storeId);
-            $storeLocale = (string)$this->scopeConfig->getValue('general/locale/code');
+            $storeLocale = (string) $this->scopeConfig->getValue('general/locale/code');
 
-            $storeData = [
-                'store_name' => $store->getName(),
-                'store_url' => $store->getBaseUrl(),
-                'store_locale' => $storeLocale,
-                'categories' => $this->collectCategories($storeId),
-                'products' => $this->collectProducts($storeId),
-                'cms_pages' => $this->collectCmsPages($storeId),
-            ];
+            $categories = $this->collectCategories($storeId);
+            $products = $this->collectProducts($storeId);
+            $cmsPages = $this->collectCmsPages($storeId);
+
+            $storeContext = $this->storeContextFactory->create()
+                ->setStoreId($storeId)
+                ->setName($store->getName())
+                ->setUrl($store->getBaseUrl())
+                ->setLocale($storeLocale)
+                ->setCategories($categories)
+                ->setProducts($products)
+                ->setCmsPages($cmsPages);
         } finally {
             $this->emulation->stopEnvironmentEmulation();
         }
 
-        return $storeData;
+        return $storeContext;
     }
 
     private function collectCategories(int $storeId): array
@@ -65,11 +74,10 @@ class StoreDataCollector
         $categories = [];
         /** @var Category $category */
         foreach ($collection as $category) {
-            $categories[] = [
-                'name' => (string) $category->getName(),
-                'url' => $category->getUrl(),
-                'description' => strip_tags((string) $category->getDescription()),
-            ];
+            $categories[] = $this->sectionItemFactory->create()
+                ->setName((string) $category->getName())
+                ->setUrl($category->getUrl())
+                ->setDescription(strip_tags((string) $category->getDescription()));
         }
 
         return $categories;
@@ -90,11 +98,10 @@ class StoreDataCollector
         $products = [];
         /** @var Product $product */
         foreach ($collection as $product) {
-            $products[] = [
-                'name' => (string) $product->getName(),
-                'url' => $product->getProductUrl(),
-                'description' => strip_tags((string) $product->getShortDescription()),
-            ];
+            $products[] = $this->sectionItemFactory->create()
+                ->setName((string) $product->getName())
+                ->setUrl($product->getProductUrl())
+                ->setDescription(strip_tags((string) $product->getShortDescription()));
         }
 
         return $products;
@@ -118,11 +125,10 @@ class StoreDataCollector
         foreach ($collection as $page) {
             $identifier = (string) $page->getIdentifier();
 
-            $pages[] = [
-                'name' => (string) $page->getTitle(),
-                'url' => $this->urlBuilder->getUrl(null, ['_direct' => $identifier]),
-                'description' => (string) $page->getMetaDescription() ?: (string) $page->getTitle(),
-            ];
+            $pages[] = $this->sectionItemFactory->create()
+                ->setName((string) $page->getTitle())
+                ->setUrl($this->urlBuilder->getUrl(null, ['_direct' => $identifier]))
+                ->setDescription((string) $page->getMetaDescription() ?: (string) $page->getTitle());
         }
 
         return $pages;
