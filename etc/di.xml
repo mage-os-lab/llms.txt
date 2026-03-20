@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="MageOS\LlmTxt\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/llmstxt.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MageOS\LlmTxt\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">llmstxt</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="object">MageOS\LlmTxt\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="MageOS\LlmTxt\Model\LlmsTxtGenerator">
+        <arguments>
+            <argument name="logger" xsi:type="object">MageOS\LlmTxt\Logger\Logger</argument>
+        </arguments>
+    </type>
+</config>

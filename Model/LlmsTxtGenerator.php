@@ -3,6 +3,7 @@
 namespace MageOS\LlmTxt\Model;
 
 use MageOS\LlmTxt\Model\OpenAi\Client as OpenAiClient;
+use Psr\Log\LoggerInterface;
 
 class LlmsTxtGenerator
 {
@@ -15,6 +16,7 @@ class LlmsTxtGenerator
         private readonly OpenAiClient $openAiClient,
         private readonly Config $config,
         private readonly PromptBuilder $promptBuilder,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function generateLlmsTxt(int $storeId): string
@@ -23,6 +25,10 @@ class LlmsTxtGenerator
 
         $model = $this->config->getOpenAiModel();
         $prompt = $this->promptBuilder->buildPrompt($storeData);
+
+        if ($this->config->isLogPromptEnabled($storeId)) {
+            $this->logger->info('LlmsTxt prompt', ['store_id' => $storeId, 'model' => $model, 'prompt' => $prompt]);
+        }
 
         return $this->openAiClient->postResponses(
             $model,

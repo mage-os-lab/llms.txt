@@ -9,6 +9,7 @@
             </general>
             <ai_generation>
                 <openai_model>gpt-5.4</openai_model>
+                <log_prompt>0</log_prompt>
             </ai_generation>
             <content>
                 <use_manual_content>0</use_manual_content>

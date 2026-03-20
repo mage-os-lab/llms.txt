@@ -96,6 +96,14 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="log_prompt" translate="label comment" type="select" sortOrder="55" showInDefault="1">
+                    <label>Log Prompt to File</label>
+                    <comment>When enabled, the AI prompt sent to OpenAI will be logged to var/log/llmstxt.log</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="*/*/enabled">1</field>
+                    </depends>
+                </field>
                 <field id="generate_button" translate="label" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>MageOS\LlmTxt\Block\Adminhtml\System\Config\GenerateButton</frontend_model>
                     <depends>

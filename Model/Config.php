@@ -20,6 +20,7 @@ class Config
     public const XML_PATH_CATEGORY_IDS = 'llmtxt/ai_generation/category_ids';
     public const XML_PATH_PRODUCT_SKUS = 'llmtxt/ai_generation/product_skus';
     public const XML_PATH_CMS_PAGE_IDENTIFIERS = 'llmtxt/ai_generation/cms_page_identifiers';
+    public const XML_PATH_LOG_PROMPT = 'llmtxt/ai_generation/log_prompt';
 
     public function __construct(
         private readonly ScopeConfigInterface $scopeConfig,
@@ -129,6 +130,15 @@ class Config
                 ScopeInterface::SCOPE_STORE,
                 $storeId
             )
+        );
+    }
+
+    public function isLogPromptEnabled(?int $storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_LOG_PROMPT,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
         );
     }
 
