@@ -6,7 +6,7 @@ class CsvSerializer
 {
     public function serialize(array $array): string
     {
-        return implode(',', $array);
+        return implode(', ', $array);
     }
 
     public function unserialize(string $string): array

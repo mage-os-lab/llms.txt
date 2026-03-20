@@ -21,7 +21,7 @@ The llms.txt format helps AI systems understand website content. Follow this str
 Optional additional context paragraph
 
 ## Section Name
-- [Link Title](URL): Brief description (1 sentence)
+- [Link Title] (URL): Brief description (1 sentence)
 
 REQUIREMENTS:
 1. Start with store name as H1
@@ -31,10 +31,12 @@ REQUIREMENTS:
 5. Keep TOTAL output under 1500 words / 2000 tokens
 6. Only include the most important/representative items
 7. Make descriptions compelling but brief
+8. Write all text only in the language of the store locale
 
 STORE DATA:
 Store Name: {$storeData['store_name']}
 Store URL: {$storeData['store_url']}
+Store Locale: {$storeData['store_locale']}
 
 Top Categories:
 {$categoriesText}
