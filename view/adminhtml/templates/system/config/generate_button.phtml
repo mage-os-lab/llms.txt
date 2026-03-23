@@ -5,8 +5,10 @@
 ?>
 <div class="llmtxt-generate-container">
     <?= $block->getButtonHtml() ?>
-    <div id="llmtxt-generate-status" style="margin-top: 10px; display: none;">
-        <span class="message"></span>
+    <div id="llmtxt-generate-status" style="margin-top: 10px;">
+        <span class="llmtxt-message">
+            <span style="color: #6d3b00;">⚠️ Save the configuration before generating to ensure all settings are applied.</span>
+        </span>
     </div>
 </div>
 
@@ -22,11 +24,10 @@ require([
     $('#llmtxt_generate_button').on('click', function () {
         const button = $(this);
         const statusDiv = $('#llmtxt-generate-status');
-        const statusMessage = statusDiv.find('.message');
+        const statusMessage = statusDiv.find('.llmtxt-message');
 
         // Disable button and show loading
         button.prop('disabled', true).addClass('disabled');
-        statusDiv.show();
         statusMessage.html('<span style="color: #007bdb;">⏳ Generating content with AI... This may take 10-30 seconds.</span>');
 
         $.ajax({

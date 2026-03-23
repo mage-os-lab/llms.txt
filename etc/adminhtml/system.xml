@@ -11,8 +11,24 @@
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Settings</label>
                 <comment><![CDATA[
-                    <p>LLMs.txt is a standard for helping AI systems understand your store's content.</p>
-                    <p>Learn more at <a href="https://llmstxt.org" target="_blank">llmstxt.org</a></p>
+                    <div style="padding: 10px; background: #f5f5f5; border-left: 3px solid #eb5202">
+                        <h3 style="margin-top:0;">What is LLMs.txt?</h3>
+                        <p>LLMs.txt is a proposed standard for helping AI systems (like ChatGPT, Claude, etc.) understand your website better.</p>
+                        <p>It's similar to robots.txt, but instead of blocking access, it <strong>guides AI</strong> to your most important content.</p>
+
+                        <h4 style="padding-left: 0">Best Practices:</h4>
+                        <ul style="padding-left: 28px">
+                            <li>Keep total content under 2,000 tokens (~1,500 words)</li>
+                            <li>Include your most important pages and products</li>
+                            <li>Write clear, concise descriptions</li>
+                            <li>Update when you add major content</li>
+                        </ul>
+
+                        <h4 style="padding-left: 0">View Your LLMs.txt:</h4>
+                        <p>After saving and flushing cache, visit: <code>https://yourdomain.com/llms.txt</code></p>
+
+                        <p><a href="https://llmstxt.org" target="_blank">Learn more about the LLMs.txt standard →</a></p>
+                    </div>
                 ]]></comment>
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable LLMs.txt</label>
@@ -86,7 +102,7 @@
                     </depends>
                 </field>
                 <field id="additional_content" translate="label comment" type="textarea" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Custom Markdown Content</label>
+                    <label>Custom Content</label>
                     <comment><![CDATA[Additional markdown content appended at the end of the generated llms.txt. You can use markdown formatting.]]></comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -101,7 +117,6 @@
                     </depends>
                 </field>
                 <field id="generate_button" translate="label comment" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <comment><![CDATA[<b>Save the changes before generating.</b>]]></comment>
                     <frontend_model>MageOS\LlmTxt\Block\Adminhtml\System\Config\GenerateButton</frontend_model>
                     <depends>
                         <field id="*/*/enabled">1</field>
@@ -134,29 +149,6 @@
                         <field id="use_manual_content">1</field>
                     </depends>
                 </field>
-            </group>
-            <group id="info" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Information</label>
-                <comment><![CDATA[
-                    <div style="padding: 10px; background: #f5f5f5; border-left: 3px solid #eb5202;">
-                        <h3 style="margin-top:0;">What is LLMs.txt?</h3>
-                        <p>LLMs.txt is a proposed standard for helping AI systems (like ChatGPT, Claude, etc.) understand your website better.</p>
-                        <p>It's similar to robots.txt, but instead of blocking access, it <strong>guides AI</strong> to your most important content.</p>
-
-                        <h4>Best Practices:</h4>
-                        <ul>
-                            <li>Keep total content under 2,000 tokens (~1,500 words)</li>
-                            <li>Include your most important pages and products</li>
-                            <li>Write clear, concise descriptions</li>
-                            <li>Update when you add major content</li>
-                        </ul>
-
-                        <h4>View Your LLMs.txt:</h4>
-                        <p>After saving and flushing cache, visit: <code>https://yourdomain.com/llms.txt</code></p>
-
-                        <p><a href="https://llmstxt.org" target="_blank">Learn more about the LLMs.txt standard →</a></p>
-                    </div>
-                ]]></comment>
             </group>
         </section>
     </system>
