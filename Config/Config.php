@@ -11,13 +11,14 @@ class Config
 {
     public const XML_PATH_ENABLED = 'llmtxt/general/enabled';
     public const XML_PATH_CACHE_LIFETIME = 'llmtxt/general/cache_lifetime';
-    public const XML_PATH_SITE_NAME = 'llmtxt/general/site_name';
-    public const XML_PATH_SITE_DESCRIPTION = 'llmtxt/general/site_description';
+    public const XML_PATH_SITE_NAME = 'llmtxt/ai_generation/site_name';
+    public const XML_PATH_SITE_DESCRIPTION = 'llmtxt/ai_generation/site_description';
+    public const XML_PATH_ADDITIONAL_CONTENT = 'llmtxt/ai_generation/additional_content';
     public const XML_PATH_GENERATED_CONTENT = 'llmtxt/content/generated_content';
     public const XML_PATH_USE_MANUAL = 'llmtxt/content/use_manual_content';
     public const XML_PATH_MANUAL_CONTENT = 'llmtxt/content/manual_content';
-    public const XML_PATH_OPENAI_API_KEY = 'llmtxt/ai_generation/openai_api_key';
-    public const XML_PATH_OPENAI_MODEL = 'llmtxt/ai_generation/openai_model';
+    public const XML_PATH_OPENAI_API_KEY = 'llmtxt/openai/openai_api_key';
+    public const XML_PATH_OPENAI_MODEL = 'llmtxt/openai/openai_model';
     public const XML_PATH_CATEGORY_IDS = 'llmtxt/ai_generation/category_ids';
     public const XML_PATH_PRODUCT_SKUS = 'llmtxt/ai_generation/product_skus';
     public const XML_PATH_CMS_PAGE_IDENTIFIERS = 'llmtxt/ai_generation/cms_page_identifiers';
@@ -60,6 +61,15 @@ class Config
     {
         return (string) $this->scopeConfig->getValue(
             self::XML_PATH_SITE_DESCRIPTION,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    public function getAdditionalContent(?int $storeId = null): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PATH_ADDITIONAL_CONTENT,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

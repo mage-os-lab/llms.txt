@@ -41,11 +41,9 @@ class StoreDataCollector
         try {
             $store = $this->storeManager->getStore($storeId);
 
-            $storeLocale = (string) $this->scopeConfig->getValue(
-                'general/locale/code',
-                ScopeInterface::SCOPE_STORE,
-                $storeId
-            );
+            $name = $this->config->getSiteName($storeId) ?: $store->getName();
+            $description = $this->config->getSiteDescription($storeId) ?: null;
+            $locale = $this->getStoreLocale($storeId);
 
             $categories = $this->collectCategories($storeId);
             $products = $this->collectProducts($storeId);
@@ -53,9 +51,10 @@ class StoreDataCollector
 
             $storeContext = $this->storeContextFactory->create()
                 ->setStoreId($storeId)
-                ->setName($store->getName())
+                ->setName($name)
+                ->setDescription($description)
                 ->setUrl($store->getBaseUrl())
-                ->setLocale($storeLocale)
+                ->setLocale($locale)
                 ->setCategories($categories)
                 ->setProducts($products)
                 ->setCmsPages($cmsPages);
@@ -150,5 +149,14 @@ class StoreDataCollector
         }
 
         return $pages;
+    }
+
+    private function getStoreLocale(int $storeId): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            'general/locale/code',
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 }

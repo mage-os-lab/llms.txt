@@ -8,6 +8,7 @@ class StoreContext extends DataObject
 {
     public const KEY_STORE_ID = 'store_id';
     public const KEY_NAME = 'name';
+    public const KEY_DESCRIPTION = 'description';
     public const KEY_URL = 'url';
     public const KEY_LOCALE = 'locale';
     public const KEY_CATEGORIES = 'categories';
@@ -32,6 +33,16 @@ class StoreContext extends DataObject
     public function setName(?string $name): self
     {
         return $this->setData(self::KEY_NAME, $name);
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->getData(self::KEY_DESCRIPTION);
+    }
+
+    public function setDescription(?string $description): self
+    {
+        return $this->setData(self::KEY_DESCRIPTION, $description);
     }
 
     public function getUrl(): ?string

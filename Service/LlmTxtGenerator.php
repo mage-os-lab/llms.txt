@@ -42,7 +42,14 @@ class LlmTxtGenerator
             ->setMaxOutputTokens(self::MAX_OUTPUT_TOKENS)
             ->setTemperature(self::TEMPERATURE);
 
-        return $this->openAiClient->postResponses($params);
+        $llmTxt = $this->openAiClient->postResponses($params);
+
+        $additionalContent = $this->config->getAdditionalContent($storeId);
+        if (!empty($additionalContent)) {
+            $llmTxt .= "\n\n$additionalContent";
+        }
+
+        return $llmTxt;
     }
 
     public function estimateTokenCount(string $content): int

@@ -19,28 +19,7 @@
                     <comment>When enabled, your store will serve an llms.txt file at /llms.txt</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="site_name" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Site Name</label>
-                    <comment>Leave empty to use store name. This appears as the H1 heading in llms.txt</comment>
-                    <depends>
-                        <field id="enabled">1</field>
-                    </depends>
-                </field>
-                <field id="site_description" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Site Description</label>
-                    <comment>A brief description of your store (appears as blockquote). Keep it concise.</comment>
-                    <depends>
-                        <field id="enabled">1</field>
-                    </depends>
-                </field>
-                <field id="custom_content" translate="label comment" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Custom Markdown Content</label>
-                    <comment><![CDATA[Add custom markdown content that will appear after the site description. You can use markdown formatting.]]></comment>
-                    <depends>
-                        <field id="enabled">1</field>
-                    </depends>
-                </field>
-                <field id="cache_lifetime" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="cache_lifetime" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cache Lifetime (seconds)</label>
                     <comment>How long to cache the generated llms.txt content. Default: 86400 (24 hours)</comment>
                     <validate>validate-number validate-zero-or-greater</validate>
@@ -49,31 +28,42 @@
                     </depends>
                 </field>
             </group>
+            <group id="openai" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>OpenAI</label>
+                <field id="openai_api_key" translate="label comment" type="obscure" sortOrder="10" showInDefault="1">
+                    <label>API Key</label>
+                    <comment><![CDATA[Get your API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="openai_model" translate="label comment" type="select" sortOrder="20" showInDefault="1">
+                    <label>AI Model</label>
+                    <comment>GPT-5.4 is recommended</comment>
+                    <source_model>MageOS\LlmTxt\Config\Source\OpenAiModel</source_model>
+                </field>
+            </group>
             <group id="ai_generation" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>AI-Powered Generation</label>
                 <comment><![CDATA[
                     <p>Use AI to intelligently generate llms.txt content from your store data.</p>
                     <p><strong>Note:</strong> Requires OpenAI API key. Generation costs approximately $0.001 per request.</p>
                 ]]></comment>
-                <field id="openai_api_key" translate="label comment" type="obscure" sortOrder="10" showInDefault="1">
-                    <label>OpenAI API Key</label>
-                    <comment><![CDATA[Get your API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>]]></comment>
-                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                <field id="site_name" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Site Name</label>
+                    <comment>This appears as the H1 heading in llms.txt. Leave empty to use store name.</comment>
                     <depends>
-                        <field id="*/*/enabled">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="openai_model" translate="label comment" type="select" sortOrder="20" showInDefault="1">
-                    <label>AI Model</label>
-                    <comment>GPT-5.4 is recommended</comment>
-                    <source_model>MageOS\LlmTxt\Config\Source\OpenAiModel</source_model>
+                <field id="site_description" translate="label comment" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Site Description</label>
+                    <comment>A brief description of your store (appears as blockquote). Keep it concise. Leave empty to let AI generate it automatically.</comment>
                     <depends>
-                        <field id="*/*/enabled">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
                 <field id="category_ids" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Category IDs</label>
-                    <comment><![CDATA[Comma-separated list of <b>category IDs</b> to include (e.g. 5, 12, 34). The <b>Meta Description</b> of each category is used as its description in the generated content.]]></comment>
+                    <comment><![CDATA[Comma-separated list of <b>category IDs</b> to include (e.g. 5, 12, 34). Specify up to 10 categories that best represent your store. The <b>Meta Description</b> of each category is used as its description in the generated content.]]></comment>
                     <backend_model>MageOS\LlmTxt\Config\Backend\CommaSeparatedIntegers</backend_model>
                     <depends>
                         <field id="enabled">1</field>
@@ -81,7 +71,7 @@
                 </field>
                 <field id="product_skus" translate="label comment" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Product SKUs</label>
-                    <comment><![CDATA[Comma-separated list of <b>product SKUs</b> to include (e.g. SKU-001, SKU-002). The <b>Meta Description</b> of each product is used as its description in the generated content.]]></comment>
+                    <comment><![CDATA[Comma-separated list of <b>product SKUs</b> to include (e.g. SKU-001, SKU-002). Specify up to 10 products that best represent your store. The <b>Meta Description</b> of each product is used as its description in the generated content.]]></comment>
                     <backend_model>MageOS\LlmTxt\Config\Backend\CommaSeparatedStrings</backend_model>
                     <depends>
                         <field id="enabled">1</field>
@@ -89,13 +79,20 @@
                 </field>
                 <field id="cms_page_identifiers" translate="label comment" type="textarea" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>CMS Page Identifiers</label>
-                    <comment><![CDATA[Comma-separated list of <b>CMS page identifiers</b> to include (e.g. about-us, contact-us). The <b>Meta Description</b> of each page is used as its description in the generated content.]]></comment>
+                    <comment><![CDATA[Comma-separated list of <b>CMS page identifiers</b> to include (e.g. about-us, contact-us). Specify up to 10 pages that best represent your store. The <b>Meta Description</b> of each page is used as its description in the generated content.]]></comment>
                     <backend_model>MageOS\LlmTxt\Config\Backend\CommaSeparatedStrings</backend_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="log_prompt" translate="label comment" type="select" sortOrder="55" showInDefault="1">
+                <field id="additional_content" translate="label comment" type="textarea" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom Markdown Content</label>
+                    <comment><![CDATA[Additional markdown content appended at the end of the generated llms.txt. You can use markdown formatting.]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="log_prompt" translate="label comment" type="select" sortOrder="70" showInDefault="1">
                     <label>Log Prompt to File</label>
                     <comment>When enabled, the AI prompt sent to OpenAI will be logged to var/log/llmstxt.log</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -103,7 +100,8 @@
                         <field id="*/*/enabled">1</field>
                     </depends>
                 </field>
-                <field id="generate_button" translate="label" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="generate_button" translate="label comment" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <comment><![CDATA[<b>Save the changes before generating.</b>]]></comment>
                     <frontend_model>MageOS\LlmTxt\Block\Adminhtml\System\Config\GenerateButton</frontend_model>
                     <depends>
                         <field id="*/*/enabled">1</field>

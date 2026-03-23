@@ -11,6 +11,8 @@ class PromptBuilder
 
     public function buildPrompt(StoreContext $storeData): string
     {
+        $descriptionLine = $storeData->getDescription() ? 'Store Description: ' . $storeData->getDescription() : null;
+
         $categorySection = $this->formatSection('Top Categories', $storeData->getCategories() ?: []);
         $productSection = $this->formatSection('Sample Products', $storeData->getProducts() ?: []);
         $pageSection = $this->formatSection('Key Pages', $storeData->getCmsPages() ?: []);
@@ -43,6 +45,7 @@ STORE DATA:
 Store Name: {$storeData->getName()}
 Store URL: {$storeData->getUrl()}
 Store Locale: {$storeData->getLocale()}
+{$descriptionLine}
 
 {$categorySection}
 
