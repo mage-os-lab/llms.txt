@@ -21,6 +21,8 @@ use MageOS\LlmTxt\Config\Config;
 
 class StoreDataCollector
 {
+    public const MAX_ENTITY_COUNT = 10;
+
     public function __construct(
         private readonly StoreManagerInterface $storeManager,
         private readonly ScopeConfigInterface $scopeConfig,
@@ -75,7 +77,10 @@ class StoreDataCollector
         $collection = $this->categoryCollectionFactory->create();
         $collection->addAttributeToSelect(['name', 'url_key', 'meta_description'])
             ->addAttributeToFilter('entity_id', ['in' => $categoryIds])
-            ->setOrder('position', 'ASC');
+            ->addAttributeToFilter('is_active', 1)
+            ->setStoreId($storeId)
+            ->setOrder('position', 'ASC')
+            ->setPageSize(self::MAX_ENTITY_COUNT);
 
         $categories = [];
         /** @var Category $category */
@@ -103,7 +108,12 @@ class StoreDataCollector
         $collection = $this->productCollectionFactory->create();
         $collection->addAttributeToSelect(['name', 'url_key', 'meta_description', 'sku'])
             ->addAttributeToFilter('sku', ['in' => $productSkus])
-            ->setOrder('created_at', 'DESC');
+            ->addAttributeToFilter('status', 1)
+            ->addAttributeToFilter('visibility', ['in' => [2, 3, 4]])
+            ->addStoreFilter($storeId)
+            ->setStoreId($storeId)
+            ->setOrder('created_at', 'DESC')
+            ->setPageSize(self::MAX_ENTITY_COUNT);
 
         $products = [];
         /** @var Product $product */
@@ -131,8 +141,10 @@ class StoreDataCollector
         $collection = $this->pageCollectionFactory->create();
         $collection->addFieldToSelect(['identifier', 'title', 'meta_description'])
             ->addFieldToFilter('identifier', ['in' => $pageIdentifiers])
+            ->addFieldToFilter('is_active', 1)
             ->addStoreFilter($storeId)
-            ->setOrder('creation_time', 'DESC');
+            ->setOrder('creation_time', 'DESC')
+            ->setPageSize(self::MAX_ENTITY_COUNT);
 
         $pages = [];
         /** @var Page $page */

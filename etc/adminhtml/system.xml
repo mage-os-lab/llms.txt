@@ -74,7 +74,7 @@
                     <comment><![CDATA[
                         Comma-separated list of <b>category IDs</b> to include (e.g. 5, 12, 34). Specify up to 10 categories that best represent your store.
                         <br><br>
-                        <b class="colorRed">Important!</b> Make sure the Meta Description fields are filled in.
+                        <b class="colorRed">Important!</b> Make sure the categories are enabled and their Meta Description fields are filled in.
                     ]]></comment>
                     <backend_model>MageOS\LlmTxt\Config\Backend\CommaSeparatedIntegers</backend_model>
                     <depends>
@@ -86,7 +86,7 @@
                     <comment><![CDATA[
                         Comma-separated list of <b>product SKUs</b> to include (e.g. SKU-001, SKU-002). Specify up to 10 products that best represent your store.
                         <br><br>
-                        <b class="colorRed">Important!</b> Make sure the Meta Description fields are filled in.
+                        <b class="colorRed">Important!</b> Make sure the products are enabled, visible individually, and their Meta Description fields are filled in.
                     ]]></comment>
                     <backend_model>MageOS\LlmTxt\Config\Backend\CommaSeparatedStrings</backend_model>
                     <depends>
@@ -98,7 +98,7 @@
                     <comment><![CDATA[
                         Comma-separated list of <b>CMS page identifiers</b> to include (e.g. about-us, contact-us). Specify up to 10 pages that best represent your store.
                         <br><br>
-                        <b class="colorRed">Important!</b> Make sure the Meta Description fields are filled in.
+                        <b class="colorRed">Important!</b> Make sure the pages are enabled and their Meta Description fields are filled in.
                     ]]></comment>
                     <backend_model>MageOS\LlmTxt\Config\Backend\CommaSeparatedStrings</backend_model>
                     <depends>

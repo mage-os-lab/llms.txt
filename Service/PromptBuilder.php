@@ -2,7 +2,6 @@
 
 namespace MageOS\LlmTxt\Service;
 
-use Magento\Framework\Exception\LocalizedException;
 use MageOS\LlmTxt\Data\SectionItem;
 use MageOS\LlmTxt\Data\StoreContext;
 
@@ -13,11 +12,6 @@ class PromptBuilder
     public function buildPrompt(StoreContext $storeData): string
     {
         $sectionCount = $this->countSections($storeData);
-        if (!$sectionCount) {
-            $fields = join(', ', ['Category IDs', 'Product SKUs', 'CMS Page Identifiers']);
-            throw new LocalizedException(__('At least one of the following fields must be filled: %1.', $fields));
-        }
-
         $descriptionLine = $storeData->getDescription() ? 'Store Description: ' . $storeData->getDescription() : null;
 
         $categorySection = $this->formatSection('Top Categories', $storeData->getCategories() ?: []);

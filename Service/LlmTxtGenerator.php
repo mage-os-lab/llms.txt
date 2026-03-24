@@ -2,10 +2,12 @@
 
 namespace MageOS\LlmTxt\Service;
 
+use Magento\Framework\Exception\LocalizedException;
 use MageOS\LlmTxt\Client\OpenAi\ResponsesParams;
 use MageOS\LlmTxt\Client\OpenAi\ResponsesParamsFactory;
 use MageOS\LlmTxt\Client\OpenAi\Client as OpenAiClient;
 use MageOS\LlmTxt\Config\Config;
+use MageOS\LlmTxt\Data\StoreContext;
 use Psr\Log\LoggerInterface;
 
 class LlmTxtGenerator
@@ -26,6 +28,7 @@ class LlmTxtGenerator
     public function generateLlmTxt(int $storeId): string
     {
         $storeData = $this->storeDataCollector->collect($storeId);
+        $this->validateStoreData($storeData);
 
         $model = $this->config->getOpenAiModel();
         $prompt = $this->promptBuilder->buildPrompt($storeData);
@@ -57,5 +60,20 @@ class LlmTxtGenerator
         // Rough estimation: 1 token ≈ 0.75 words
         $wordCount = str_word_count($content);
         return (int) ceil($wordCount * 1.3);
+    }
+
+    private function validateStoreData(StoreContext $storeData): void
+    {
+        $sections = array_filter([
+            $storeData->getCategories(),
+            $storeData->getProducts(),
+            $storeData->getCmsPages(),
+        ]);
+
+        if (!$sections) {
+            throw new LocalizedException(
+                __('No valid categories, products, or CMS pages were found. Please check the values and try again.')
+            );
+        }
     }
 }
