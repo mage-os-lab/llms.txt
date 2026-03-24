@@ -4,7 +4,6 @@
         <llmtxt>
             <general>
                 <enabled>0</enabled>
-                <cache_lifetime>86400</cache_lifetime>
             </general>
             <ai_generation>
                 <openai_model>gpt-5.4</openai_model>

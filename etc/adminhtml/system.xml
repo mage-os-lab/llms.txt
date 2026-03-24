@@ -35,14 +35,6 @@
                     <comment>When enabled, your store will serve an llms.txt file at /llms.txt</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="cache_lifetime" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Cache Lifetime (seconds)</label>
-                    <comment>How long to cache the generated llms.txt content. Default: 86400 (24 hours)</comment>
-                    <validate>validate-number validate-zero-or-greater</validate>
-                    <depends>
-                        <field id="enabled">1</field>
-                    </depends>
-                </field>
             </group>
             <group id="openai" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>OpenAI</label>

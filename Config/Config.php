@@ -10,7 +10,6 @@ use MageOS\LlmTxt\Service\CsvSerializer;
 class Config
 {
     public const XML_PATH_ENABLED = 'llmtxt/general/enabled';
-    public const XML_PATH_CACHE_LIFETIME = 'llmtxt/general/cache_lifetime';
     public const XML_PATH_SITE_NAME = 'llmtxt/ai_generation/site_name';
     public const XML_PATH_SITE_DESCRIPTION = 'llmtxt/ai_generation/site_description';
     public const XML_PATH_ADDITIONAL_CONTENT = 'llmtxt/ai_generation/additional_content';
@@ -34,15 +33,6 @@ class Config
     {
         return $this->scopeConfig->isSetFlag(
             self::XML_PATH_ENABLED,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
-
-    public function getCacheLifetime(?int $storeId = null): int
-    {
-        return (int) $this->scopeConfig->getValue(
-            self::XML_PATH_CACHE_LIFETIME,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
