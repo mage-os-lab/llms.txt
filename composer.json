@@ -10,7 +10,7 @@
             "email": "hello@mage-os.org"
         }
     ],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "require": {
         "magento/framework": "^103.0",
         "guzzlehttp/guzzle": "^7.0"
