@@ -110,36 +110,6 @@ final class ConfigTest extends TestCase
         $this->assertSame('# Store\n> Description', $this->config->getGeneratedContent());
     }
 
-    public function test_should_use_manual_content_returns_true_when_flag_is_set(): void
-    {
-        $this->scopeConfig
-            ->method('isSetFlag')
-            ->with(Config::XML_PATH_USE_MANUAL, ScopeInterface::SCOPE_STORE, null)
-            ->willReturn(true);
-
-        $this->assertTrue($this->config->shouldUseManualContent());
-    }
-
-    public function test_should_use_manual_content_returns_false_when_flag_is_not_set(): void
-    {
-        $this->scopeConfig
-            ->method('isSetFlag')
-            ->with(Config::XML_PATH_USE_MANUAL, ScopeInterface::SCOPE_STORE, null)
-            ->willReturn(false);
-
-        $this->assertFalse($this->config->shouldUseManualContent());
-    }
-
-    public function test_get_manual_content_returns_configured_value(): void
-    {
-        $this->scopeConfig
-            ->method('getValue')
-            ->with(Config::XML_PATH_MANUAL_CONTENT, ScopeInterface::SCOPE_STORE, null)
-            ->willReturn('Manual content here');
-
-        $this->assertSame('Manual content here', $this->config->getManualContent());
-    }
-
     public function test_get_openai_api_key_decrypts_stored_value(): void
     {
         $this->scopeConfig

@@ -129,29 +129,14 @@
             </group>
             <group id="content" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>LLMs.txt Content</label>
-                <comment>Review and edit the AI-generated content or write your own</comment>
+                <comment>Review and edit the content served at /llms.txt. Use the "Generate with AI" button to populate it, or write it by hand.</comment>
                 <field id="generated_content" translate="label comment" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Generated Content</label>
-                    <comment>This content will be served at /llms.txt. Edit as needed.</comment>
+                    <label>Content</label>
+                    <comment>This content is served at /llms.txt. Edit freely.</comment>
                     <frontend_class>llmtxt-content-editor</frontend_class>
                     <backend_model>MageOS\LlmTxt\Config\Backend\GeneratedContent</backend_model>
                     <depends>
                         <field id="*/*/enabled">1</field>
-                    </depends>
-                </field>
-                <field id="use_manual_content" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Use Manual Content</label>
-                    <comment>Override AI-generated content with your own custom content</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="*/*/enabled">1</field>
-                    </depends>
-                </field>
-                <field id="manual_content" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Manual Content</label>
-                    <comment>Write your own llms.txt content in markdown format</comment>
-                    <depends>
-                        <field id="use_manual_content">1</field>
                     </depends>
                 </field>
             </group>

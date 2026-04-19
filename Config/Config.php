@@ -14,8 +14,6 @@ class Config
     public const XML_PATH_SITE_DESCRIPTION = 'llmtxt/ai_generation/site_description';
     public const XML_PATH_ADDITIONAL_CONTENT = 'llmtxt/ai_generation/additional_content';
     public const XML_PATH_GENERATED_CONTENT = 'llmtxt/content/generated_content';
-    public const XML_PATH_USE_MANUAL = 'llmtxt/content/use_manual_content';
-    public const XML_PATH_MANUAL_CONTENT = 'llmtxt/content/manual_content';
     public const XML_PATH_OPENAI_API_KEY = 'llmtxt/openai/openai_api_key';
     public const XML_PATH_OPENAI_MODEL = 'llmtxt/openai/openai_model';
     public const XML_PATH_CATEGORY_IDS = 'llmtxt/ai_generation/category_ids';
@@ -69,24 +67,6 @@ class Config
     {
         return (string) $this->scopeConfig->getValue(
             self::XML_PATH_GENERATED_CONTENT,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
-
-    public function shouldUseManualContent(?int $storeId = null): bool
-    {
-        return $this->scopeConfig->isSetFlag(
-            self::XML_PATH_USE_MANUAL,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
-
-    public function getManualContent(?int $storeId = null): string
-    {
-        return (string) $this->scopeConfig->getValue(
-            self::XML_PATH_MANUAL_CONTENT,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

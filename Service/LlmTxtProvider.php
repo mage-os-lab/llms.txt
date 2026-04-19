@@ -10,10 +10,6 @@ class LlmTxtProvider
 
     public function get(int $storeId): string
     {
-        if ($this->config->shouldUseManualContent($storeId)) {
-            return $this->config->getManualContent($storeId);
-        }
-
         return $this->config->getGeneratedContent($storeId);
     }
 }
