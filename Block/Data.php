@@ -6,7 +6,6 @@ use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Framework\View\Element\Context;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\StoreGraphQl\Model\Resolver\Store\ConfigIdentity;
 use MageOS\LlmTxt\Config\Backend\GeneratedContent;
 use MageOS\LlmTxt\Service\LlmTxtProvider;
 
@@ -40,7 +39,6 @@ class Data extends AbstractBlock implements IdentityInterface
 
         return [
             GeneratedContent::CACHE_TAG . '_' . $storeId,
-            ConfigIdentity::CACHE_TAG . '_' . $storeId,
         ];
     }
 }

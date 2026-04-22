@@ -41,8 +41,11 @@ class StoreDataCollector
         $this->emulation->startEnvironmentEmulation($storeId, Area::AREA_FRONTEND, true);
 
         try {
-            $store = $this->storeManager->getStore($storeId);
+            // Explicitly set the URL builder scope to resolve the Magento bug that results in an incorrect base URL.
+            // Without this change, category and CMS page URLs may use the admin base URL.
+            $this->urlBuilder->setScope($storeId);
 
+            $store = $this->storeManager->getStore($storeId);
             $name = $this->config->getSiteName($storeId) ?: $store->getName();
             $description = $this->config->getSiteDescription($storeId) ?: null;
             $locale = $this->getStoreLocale($storeId);
