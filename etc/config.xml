@@ -11,9 +11,6 @@
             <ai_generation>
                 <log_prompt>0</log_prompt>
             </ai_generation>
-            <content>
-                <use_manual_content>0</use_manual_content>
-            </content>
         </llmtxt>
     </default>
 </config>

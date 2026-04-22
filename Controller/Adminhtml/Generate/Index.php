@@ -20,6 +20,19 @@ class Index implements HttpPostActionInterface
         private readonly LlmTxtGenerator $llmTxtGenerator,
     ) {}
 
+    private function resolveApiKeyOverride(): ?string
+    {
+        $posted = (string) $this->request->getParam('api_key', '');
+
+        // Obscure fields post back all-asterisks when the user did not edit the field —
+        // treat that as "use the saved key" by falling through to the encrypted config.
+        if ($posted === '' || preg_match('/^\*+$/', $posted) === 1) {
+            return null;
+        }
+
+        return $posted;
+    }
+
     public function execute(): Json
     {
         $result = $this->resultJsonFactory->create();
@@ -30,7 +43,9 @@ class Index implements HttpPostActionInterface
                 $storeId = (int) $this->storeManager->getDefaultStoreView()->getId();
             }
 
-            $generatedContent = $this->llmTxtGenerator->generateLlmTxt($storeId);
+            $apiKeyOverride = $this->resolveApiKeyOverride();
+
+            $generatedContent = $this->llmTxtGenerator->generateLlmTxt($storeId, $apiKeyOverride);
             $tokenCount = $this->llmTxtGenerator->estimateTokenCount($generatedContent);
 
             return $result->setData([

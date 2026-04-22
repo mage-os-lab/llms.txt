@@ -7,7 +7,7 @@
     <?= $block->getButtonHtml() ?>
     <div id="llmtxt-generate-status" style="margin-top: 10px;">
         <span class="llmtxt-message">
-            <span style="color: #6d3b00;">⚠️ Save the configuration before generating to ensure all settings are applied.</span>
+            <span>Enter your API key above and click Generate — no need to save first.</span>
         </span>
     </div>
 </div>
@@ -25,6 +25,7 @@ require([
         const button = $(this);
         const statusDiv = $('#llmtxt-generate-status');
         const statusMessage = statusDiv.find('.llmtxt-message');
+        const apiKeyField = $('#llmtxt_openai_openai_api_key');
 
         // Disable button and show loading
         button.prop('disabled', true).addClass('disabled');
@@ -36,7 +37,8 @@ require([
             dataType: 'json',
             data: {
                 form_key: FORM_KEY,
-                store: '<?= (int) $block->getRequest()->getParam('store', 0) ?>'
+                store: '<?= (int) $block->getRequest()->getParam('store', 0) ?>',
+                api_key: apiKeyField.val() || ''
             },
             success: function (response) {
                 if (response.success) {

@@ -25,7 +25,7 @@ class LlmTxtGenerator
         private readonly ResponsesParamsFactory $responsesParamsFactory,
     ) {}
 
-    public function generateLlmTxt(int $storeId): string
+    public function generateLlmTxt(int $storeId, ?string $apiKeyOverride = null): string
     {
         $storeData = $this->storeDataCollector->collect($storeId);
         $this->validateStoreData($storeData);
@@ -45,7 +45,7 @@ class LlmTxtGenerator
             ->setMaxOutputTokens(self::MAX_OUTPUT_TOKENS)
             ->setTemperature(self::TEMPERATURE);
 
-        $llmTxt = $this->openAiClient->postResponses($params);
+        $llmTxt = $this->openAiClient->postResponses($params, $apiKeyOverride);
 
         $additionalContent = $this->config->getAdditionalContent($storeId);
         if (!empty($additionalContent)) {

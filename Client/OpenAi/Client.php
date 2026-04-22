@@ -17,9 +17,11 @@ class Client
         private readonly Config $config,
     ) {}
 
-    public function postResponses(ResponsesParams $params): string
+    public function postResponses(ResponsesParams $params, ?string $apiKeyOverride = null): string
     {
-        $apiKey = $this->config->getOpenAiApiKey();
+        $apiKey = $apiKeyOverride !== null && $apiKeyOverride !== ''
+            ? $apiKeyOverride
+            : $this->config->getOpenAiApiKey();
         if (empty($apiKey)) {
             throw new \RuntimeException('OpenAI API key is not configured');
         }
