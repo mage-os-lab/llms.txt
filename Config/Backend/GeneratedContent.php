@@ -23,8 +23,8 @@ class GeneratedContent extends Value implements IdentityInterface
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
         private readonly StoreManagerInterface $storeManager,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
