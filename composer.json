@@ -7,10 +7,9 @@
     "authors": [
         {
             "name": "Mage-OS Lab",
-            "email": "hello@mage-os.org"
+            "email": "info@mage-os.org"
         }
     ],
-    "version": "0.2.1",
     "require": {
         "magento/framework": "^103.0",
         "guzzlehttp/guzzle": "^7.0"
